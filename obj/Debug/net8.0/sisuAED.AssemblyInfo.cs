@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sisuAED")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3cc316dff962f2cf9427042fd7fda66d38c6e7f1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ba948bc5b084e3aef3d8d136de1660a9875ef21c")]
 [assembly: System.Reflection.AssemblyProductAttribute("sisuAED")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sisuAED")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
