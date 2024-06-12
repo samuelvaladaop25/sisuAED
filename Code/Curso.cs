@@ -22,6 +22,10 @@ public class Curso {
         get { return codigoId; }
         set { codigoId = value; }
     }
+
+    public void CalculaResultados(){
+        
+    }
     
 
 }

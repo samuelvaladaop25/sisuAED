@@ -34,4 +34,8 @@ public class Fila
         }
         Console.WriteLine("]");
     }
+
+    void OrdenaFila(){
+        
+    }
 }
