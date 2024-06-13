@@ -1,32 +1,26 @@
 public class Curso {
-    private int codigoId;
-    private string nome;
-    private int numVagas;
-    public List<Aluno> aprovados;
-    public Fila espera = new Fila(10);
 
-    public Curso(int codigoId, string nome, int numVagas){
-        this.codigoId=codigoId;
-        this.nome=nome;
-        this.numVagas=numVagas;
-    }
+    public int CodigoId { get; private set; }
+    public string Nome { get; private set; }
+    public int NumVagas { get; private set; }
+    public List<Candidato> Aprovados { get; private set; } = new List<Candidato>();
+    public Fila Espera { get; private set; } = new Fila(10);
 
-    public string Nome
+    // Constructor
+    public Curso(int codigoId, string nome, int numVagas)
     {
-        get { return nome; }
-        set { nome = value; }
-    }
-
-    public int CodigoId
-    {
-        get { return codigoId; }
-        set { codigoId = value; }
+        CodigoId = codigoId;
+        Nome = nome;
+        NumVagas = numVagas;
     }
 
     public void CalculaResultados(){
         
     }
-    
 
+
+    public override string ToString()
+    {
+        return $"Curso: {Nome} - Vagas: {NumVagas}";
+    }
 }
-

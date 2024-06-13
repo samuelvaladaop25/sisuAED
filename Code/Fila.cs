@@ -1,13 +1,13 @@
 public class Fila
 {
-    Aluno[] array;
+    Candidato[] array;
     int primeiro, ultimo;
     public Fila(int tamanho)
     {
-        array = new Aluno[tamanho + 1];
+        array = new Candidato[tamanho + 1];
         primeiro = ultimo = 0;
     }
-    void Inserir(Aluno x)
+    void Inserir(Candidato x)
     {
         if (((ultimo + 1) % array.Length) != primeiro)
         {
@@ -15,11 +15,11 @@ public class Fila
             ultimo = (ultimo + 1) % array.Length;
         }
     }
-    Aluno Remover()
+    Candidato Remover()
     {
         if (primeiro == ultimo)
             throw new Exception("Erro! Fila Vazia");
-        Aluno resp = array[primeiro];
+        Candidato resp = array[primeiro];
         primeiro = (primeiro + 1) % array.Length;
         return resp;
     }
