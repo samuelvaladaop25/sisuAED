@@ -11,13 +11,12 @@ namespace sisuAED
 
             linhas = LeArquivo("../../../Artefatos/entrada.txt");
 
-            // pega o número de cursos e candidatos
             int numCursos, numCandidatos;
             numCursos = int.Parse(linhas[0].Split(';')[0]);
             numCandidatos = int.Parse(linhas[0].Split(';')[1]);
 
-            // Cria os objetos
-            Curso[] cursos = getCursos(linhas, numCursos, 1);
+
+            Dictionary<int, Curso> cursos = getCursos(linhas, numCursos);
             Candidato[] candidatos = getCandidatos(linhas, numCandidatos, numCursos + 1);
 
 
@@ -32,14 +31,12 @@ namespace sisuAED
 
             try
             {
-                // Open the text file using a stream reader.
                 using StreamReader reader = new(caminho, Encoding.GetEncoding("ISO-8859-1"));
 
                 string line;
 
                 do
                 {
-                    // Read the stream as a string.
                     line = reader.ReadLine();
 
                     if (line == null)
@@ -57,17 +54,19 @@ namespace sisuAED
             return list.ToArray();
         }
 
-        public static Curso[] getCursos(string[] linhas, int numCursos, int linhaInicial)
+        public static Dictionary<int, Curso> getCursos(string[] linhas, int numCursos)
         {
-            Curso[] cursos = new Curso[numCursos];
+            Dictionary<int, Curso> cursos = new Dictionary<int, Curso>();
 
             for (int i = 0; i < numCursos; i++)
             {
-                string[] linhaDividida = linhas[i + linhaInicial].Split(';');
+                string[] linhaDividida = linhas[i + 1].Split(';');
 
-                // Cria os cursos com as partes da linha
                 if (!String.IsNullOrEmpty(linhaDividida[0]) && linhaDividida.Length == 3)
-                    cursos[i] = new Curso(int.Parse(linhaDividida[0]), linhaDividida[1], int.Parse(linhaDividida[2]));
+                {
+                    Curso curso = new Curso(int.Parse(linhaDividida[0]), linhaDividida[1], int.Parse(linhaDividida[2]));
+                    cursos.Add(curso.CodigoId, curso);
+                }
 
                 else
                     throw new Exception($"Linha {i} inválida!");
@@ -84,7 +83,6 @@ namespace sisuAED
             {
                 string[] linhaDividida = linhas[i + linhaInicial].Split(';');
 
-                // Cria os Candidatos com as partes da linha
                 if (!String.IsNullOrEmpty(linhaDividida[0]) && linhaDividida.Length == 6)
                     candidatos[i] = new Candidato(linhaDividida[0], int.Parse(linhaDividida[1]), int.Parse(linhaDividida[2]), int.Parse(linhaDividida[3]), int.Parse(linhaDividida[4]), int.Parse(linhaDividida[5]));
 
@@ -94,5 +92,7 @@ namespace sisuAED
 
             return candidatos;
         }
+
+
     }
 }

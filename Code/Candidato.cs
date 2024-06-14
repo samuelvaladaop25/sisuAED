@@ -22,7 +22,7 @@
 
     public override string ToString()
     {
-        return $"Aluno: {Nome} - Media: {NotaMedia}";
+        return $"{Nome};{NotaRedacao};{NotaMat};{NotaLing};{Opcao1};{Opcao2}";
     }
 }
 

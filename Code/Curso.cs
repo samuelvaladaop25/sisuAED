@@ -3,8 +3,8 @@ public class Curso {
     public int CodigoId { get; private set; }
     public string Nome { get; private set; }
     public int NumVagas { get; private set; }
-    public List<Candidato> Aprovados { get; private set; } = new List<Candidato>();
-    public Fila Espera { get; private set; } = new Fila(10);
+    public List<Candidato> Aprovados { get; set; } = new List<Candidato>();
+    public Fila Espera { get; set; } = new Fila(10);
 
     // Constructor
     public Curso(int codigoId, string nome, int numVagas)
