@@ -16,8 +16,8 @@ namespace sisuAED
             numCandidatos = int.Parse(linhas[0].Split(';')[1]);
 
 
-            Dictionary<int, Curso> cursos = getCursos(linhas, numCursos);
-            Candidato[] candidatos = getCandidatos(linhas, numCandidatos, numCursos + 1);
+            Dictionary<int, Curso> cursos = GetCursos(linhas, numCursos);
+            Candidato[] candidatos = GetCandidatos(linhas, numCandidatos, numCursos + 1);
 
 
 
@@ -54,7 +54,7 @@ namespace sisuAED
             return list.ToArray();
         }
 
-        public static Dictionary<int, Curso> getCursos(string[] linhas, int numCursos)
+        public static Dictionary<int, Curso> GetCursos(string[] linhas, int numCursos)
         {
             Dictionary<int, Curso> cursos = new Dictionary<int, Curso>();
 
@@ -75,7 +75,7 @@ namespace sisuAED
             return cursos;
         }
 
-        public static Candidato[] getCandidatos(string[] linhas, int numCandidatos, int linhaInicial)
+        public static Candidato[] GetCandidatos(string[] linhas, int numCandidatos, int linhaInicial)
         {
             Candidato[] candidatos = new Candidato[numCandidatos];
 
@@ -93,6 +93,21 @@ namespace sisuAED
             return candidatos;
         }
 
+        public void Selecao(Dictionary<int, Curso> cursos, Candidato[] candidatos)
+        {
+            // ordenação
 
+
+            foreach (int codigoCurso in cursos.Keys)
+            {
+                // 31984762337
+                // pegar os numVagas na quantidade dos alunos que tem o curso como primeira opção
+
+                // numVagas nao foi preenchido?
+
+                // se tiver sobrando, colocar o curso na fila de espera
+            }
+
+        }
     }
 }
