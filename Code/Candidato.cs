@@ -7,7 +7,11 @@
     public int NotaLing { get; private set; }
     public int Opcao1 { get; private set; }
     public int Opcao2 { get; private set; }
+    public bool aprovadoOpcao1 { get; set; }
+    public bool aprovadoOpcao2 { get; set; }
 
+    public bool esperaOpcao1 { get; set; }
+    public bool esperaOpcao2 { get; set; }
     // Constructor
     public Candidato(string nome, int notaRedacao, int notaMat, int notaLing, int opcao1, int opcao2)
     {
@@ -16,6 +20,10 @@
         NotaMat = notaMat;
         NotaLing = notaLing;
         Opcao1 = opcao1;
+        aprovadoOpcao1 = false;
+        aprovadoOpcao2 = false;
+        esperaOpcao1 = false;
+        esperaOpcao2 = false;
         Opcao2 = opcao2;
         NotaMedia = (notaRedacao + notaMat + notaLing) / 3;
     }

@@ -9,7 +9,7 @@ namespace sisuAED
         {
             string[] linhas;
 
-            linhas = LeArquivo("../../../Artefatos/entrada.txt");
+            linhas = LeArquivo("../../../Artefatos/entradaOrdenadaTeste.txt");
 
             int numCursos, numCandidatos;
             numCursos = int.Parse(linhas[0].Split(';')[0]);
@@ -18,6 +18,8 @@ namespace sisuAED
 
             Dictionary<int, Curso> cursos = GetCursos(linhas, numCursos);
             Candidato[] candidatos = GetCandidatos(linhas, numCandidatos, numCursos + 1);
+
+            Selecao(cursos, candidatos);
 
 
 
@@ -69,7 +71,7 @@ namespace sisuAED
                 }
 
                 else
-                    throw new Exception($"Linha {i} inv�lida!");
+                    throw new Exception($"Linha {i} inv�lida!");
             }
 
             return cursos;
@@ -87,27 +89,109 @@ namespace sisuAED
                     candidatos[i] = new Candidato(linhaDividida[0], int.Parse(linhaDividida[1]), int.Parse(linhaDividida[2]), int.Parse(linhaDividida[3]), int.Parse(linhaDividida[4]), int.Parse(linhaDividida[5]));
 
                 else
-                    throw new Exception($"Linha {i} inv�lida!");
+                    throw new Exception($"Linha {i} inv�lida!");
             }
 
             return candidatos;
         }
 
-        public void Selecao(Dictionary<int, Curso> cursos, Candidato[] candidatos)
+        public static void Selecao(Dictionary<int, Curso> cursos, Candidato[] candidatos)
         {
-            // ordena��o
+            // 31984762337
+
+            // AQUI O ARRAY CANDIDATOS PRECISA ESTAR ORDENADO DE FORMA DECRESCENTE DA NOTA MÉDIA
+
+            // 1- Inserir na Lista de aprovados do curso y os x (numVagas) os candidatos com a opção 1 de curso y e dar true no aprovadoop1
+            // 2- Inserir lista de espera da do curso y aqueles que tem op1 = y
+            // 3- Inserir na Lista de aprovados do curso y os x (numVagas) os candidatos com a opção 2 de curso y que nao foram aprovados na op1 e dar true no aprovadoop2
+            // 4- Inserir lista de espera da do curso y aqueles que tem op2 = y
 
 
             foreach (int codigoCurso in cursos.Keys)
             {
-                // 31984762337
-                // pegar os numVagas na quantidade dos alunos que tem o curso como primeira op��o
+                // For enquanto lista de aprovados for menor que o numero de vagas
+                for (int i = 0; cursos[codigoCurso].Aprovados.Count < cursos[codigoCurso].NumVagas; i++)
+                {
+                    try
+                    {
+                        if (candidatos[i].Opcao1 == codigoCurso)
+                        {
+                            cursos[codigoCurso].Aprovados.Add(candidatos[i]);
+                            candidatos[i].aprovadoOpcao1 = true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
+                        break;
+                    }
+                }
 
-                // numVagas nao foi preenchido?
+                if (cursos[codigoCurso].Aprovados.Count == cursos[codigoCurso].NumVagas)
+                {
+                    //Curso está sem vagas, usar fila de espera
 
-                // se tiver sobrando, colocar o curso na fila de espera
+                    for (int i = 0; cursos[codigoCurso].Espera.Contar() < 10; i++)
+                    {
+                        try
+                        {
+                            if (candidatos[i].Opcao1 == codigoCurso && candidatos[i].aprovadoOpcao1 == false)
+                            {
+                                cursos[codigoCurso].Espera.Inserir(candidatos[i]);
+                                candidatos[i].esperaOpcao1 = true;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
+                            break;
+                        }
+                    }
+                }
+
+                for (int i = 0; cursos[codigoCurso].Aprovados.Count < cursos[codigoCurso].NumVagas; i++)
+                {
+                    try
+                    {
+                        if (candidatos[i].Opcao2 == codigoCurso && candidatos[i].aprovadoOpcao1 == false)
+                        {
+                            cursos[codigoCurso].Aprovados.Add(candidatos[i]);
+                            candidatos[i].aprovadoOpcao2 = true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
+                        break;
+                    }
+                }
+
+                if (cursos[codigoCurso].Aprovados.Count == cursos[codigoCurso].NumVagas)
+                {
+                    //Curso está sem vagas, usar fila de espera
+
+                    for (int i = 0; cursos[codigoCurso].Espera.Contar() < 10; i++)
+                    {
+                        try
+                        {
+                            if (candidatos.Length > i)
+                            {  // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
+                                if (candidatos[i].Opcao2 == codigoCurso && candidatos[i].aprovadoOpcao2 == false)
+                                {
+                                    cursos[codigoCurso].Espera.Inserir(candidatos[i]);
+                                    candidatos[i].esperaOpcao2 = true;
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
+                            break;
+                        }
+                    }
+
+                }
             }
-
         }
     }
 }

@@ -7,7 +7,7 @@ public class Fila
         array = new Candidato[tamanho + 1];
         primeiro = ultimo = 0;
     }
-    void Inserir(Candidato x)
+    public void Inserir(Candidato x)
     {
         if (((ultimo + 1) % array.Length) != primeiro)
         {
@@ -15,7 +15,7 @@ public class Fila
             ultimo = (ultimo + 1) % array.Length;
         }
     }
-    Candidato Remover()
+    public Candidato Remover()
     {
         if (primeiro == ultimo)
             throw new Exception("Erro! Fila Vazia");
@@ -23,7 +23,7 @@ public class Fila
         primeiro = (primeiro + 1) % array.Length;
         return resp;
     }
-    void Mostrar()
+    public void Mostrar()
     {
         int i = primeiro;
         Console.Write("[");
@@ -35,7 +35,17 @@ public class Fila
         Console.WriteLine("]");
     }
 
-    void OrdenaFila(){
-        
+    public int Contar()
+    {
+        if (primeiro == ultimo)
+            return 0;
+        int i = primeiro, contador = 0; ;
+        while (i != ultimo)
+        {
+            contador++;
+            i = (i + 1) % array.Length;
+        }
+        return contador;
+
     }
 }
