@@ -9,7 +9,7 @@ namespace sisuAED
         {
             string[] linhas;
 
-            linhas = LeArquivo("../../../Artefatos/entradaOrdenadaTeste.txt");
+            linhas = LeArquivo("../../../Artefatos/entrada.txt");
 
             int numCursos, numCandidatos;
             numCursos = int.Parse(linhas[0].Split(';')[0]);
@@ -106,6 +106,8 @@ namespace sisuAED
             // 3- Inserir na Lista de aprovados do curso y os x (numVagas) os candidatos com a opção 2 de curso y que nao foram aprovados na op1 e dar true no aprovadoop2
             // 4- Inserir lista de espera da do curso y aqueles que tem op2 = y
 
+            candidatos = QuickSort(candidatos, 0, candidatos.Length-1);
+
 
             foreach (int codigoCurso in cursos.Keys)
             {
@@ -117,7 +119,9 @@ namespace sisuAED
                         if (candidatos[i].Opcao1 == codigoCurso)
                         {
                             cursos[codigoCurso].Aprovados.Add(candidatos[i]);
-                            candidatos[i].aprovadoOpcao1 = true;
+
+                            // samuel esqueceu: remove ele da lista de espera e de aprovados da segunda opcao
+                            PassouOpcao1(cursos, candidatos[i]);
                         }
                     }
                     catch (Exception)
@@ -130,21 +134,15 @@ namespace sisuAED
                 if (cursos[codigoCurso].Aprovados.Count == cursos[codigoCurso].NumVagas)
                 {
                     //Curso está sem vagas, usar fila de espera
-
-                    for (int i = 0; cursos[codigoCurso].Espera.Contar() < 10; i++)
+                    int tamEspera = cursos[codigoCurso].Espera.GetQuantidade();// samuel tinha botado dentro da condição do for e isso gasta processamento atoa
+                    for (int i = 0; tamEspera < 10 && i < candidatos.Length; i++)// samuel nao fez parar ao atingir o número de candidatos, isso aqui tava fazendo com que a função demorava 25 segundos pra rodar, nao tinha condição de parada...
                     {
-                        try
+                        // o candidato deve ter o curso como opção1 e não estar já aprovado
+                        if (candidatos[i].Opcao1 == codigoCurso && candidatos[i].aprovadoOpcao1 == false)
                         {
-                            if (candidatos[i].Opcao1 == codigoCurso && candidatos[i].aprovadoOpcao1 == false)
-                            {
-                                cursos[codigoCurso].Espera.Inserir(candidatos[i]);
-                                candidatos[i].esperaOpcao1 = true;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
-                            break;
+                            cursos[codigoCurso].Espera.Inserir(candidatos[i]);
+                            candidatos[i].esperaOpcao1 = true;
+                            tamEspera++; // por causa do contar do For
                         }
                     }
                 }
@@ -169,29 +167,90 @@ namespace sisuAED
                 if (cursos[codigoCurso].Aprovados.Count == cursos[codigoCurso].NumVagas)
                 {
                     //Curso está sem vagas, usar fila de espera
-
-                    for (int i = 0; cursos[codigoCurso].Espera.Contar() < 10; i++)
+                    int tamEspera = cursos[codigoCurso].Espera.GetQuantidade(); // samuel tinha botado dentro da condição do for e isso gasta processamento atoa
+                    for (int i = 0; tamEspera < 10 && i < candidatos.Length; i++) // samuel nao fez parar ao atingir o número de candidatos, isso aqui tava fazendo com que a função demorava 25 segundos pra rodar, nao tinha condição de parada...
                     {
-                        try
+                        if (candidatos[i].Opcao2 == codigoCurso && candidatos[i].aprovadoOpcao2 == false && candidatos[i].aprovadoOpcao1 == false) // ele nao pode entrar na fila de espera da opcao2 estando aprvado na opcao1
                         {
-                            if (candidatos.Length > i)
-                            {  // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
-                                if (candidatos[i].Opcao2 == codigoCurso && candidatos[i].aprovadoOpcao2 == false)
-                                {
-                                    cursos[codigoCurso].Espera.Inserir(candidatos[i]);
-                                    candidatos[i].esperaOpcao2 = true;
-                                }
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
-                            break;
+                            cursos[codigoCurso].Espera.Inserir(candidatos[i]);
+                            candidatos[i].esperaOpcao2 = true;
+                            tamEspera++; // por causa do contar do For
                         }
                     }
 
                 }
             }
         }
+        // faz a fila de espera da opcao2 andar
+        public static void PassouOpcao1(Dictionary<int, Curso> cursos, Candidato candidato)
+        {
+            Curso cursoOpcao2 = cursos[candidato.Opcao2];
+            Candidato? primeiroEsperaOpcao2 = cursoOpcao2.Espera.GetPrimeiro();
+
+            if (candidato.aprovadoOpcao2)
+            {
+                cursoOpcao2.Aprovados.Remove(candidato);
+
+                Candidato? primeiroEspera = cursoOpcao2.Espera.GetPrimeiro();
+
+                if (primeiroEspera != null)
+                {
+                    cursoOpcao2.Espera.Remover();
+                    cursoOpcao2.Aprovados.Add(primeiroEspera);
+
+                    // verifica em qual das opcoes ela foi adicionada
+                    if (primeiroEspera.Opcao1 == cursoOpcao2.CodigoId)
+                    {
+                        primeiroEspera.aprovadoOpcao1 = true;
+                        primeiroEspera.esperaOpcao1 = false;
+                        PassouOpcao1(cursos, primeiroEspera);
+                    }
+                    else
+                    {
+                        primeiroEspera.aprovadoOpcao2 = true;
+                        primeiroEspera.esperaOpcao2 = false;
+                    }
+
+                }
+            }
+
+            else if (primeiroEsperaOpcao2 != null && primeiroEsperaOpcao2 == candidato)
+                cursoOpcao2.Espera.Remover();
+
+            candidato.aprovadoOpcao1 = true;
+            candidato.esperaOpcao1 = false;
+            candidato.aprovadoOpcao2 = false;
+            candidato.esperaOpcao2 = false;
+        }
+
+        static Candidato[] QuickSort(Candidato[] array, int esq, int dir)
+        {
+            int l = esq, d = dir, pivo = array[(esq + dir) / 2].NotaMedia;
+            Candidato aux;
+
+            while (l <= d)
+            {
+                while (array[l].NotaMedia > pivo) l++;
+                while (array[d].NotaMedia < pivo) d--;
+
+                if (l <= d)
+                {
+                    aux = array[l];
+                    array[l] = array[d];
+                    array[d] = aux;
+
+                    l++;
+                    d--;
+                }
+            }
+
+            if (esq < d)
+                QuickSort(array, esq, d);
+            if (l < dir)
+                QuickSort(array, l, dir);
+
+            return array;
+        }
+
     }
 }

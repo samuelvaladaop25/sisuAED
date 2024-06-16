@@ -10,4 +10,4 @@ Peppa Pig;700;700;500;3;2
 Super Mario Bros;600;600;500;4;3
 Peter Parker;700;850;800;3;4
 Deadpool;900;700;800;3;4
-Tio Patinhas;700;700;600;4;2
+Tio Patinhas;700;700;600;4;2

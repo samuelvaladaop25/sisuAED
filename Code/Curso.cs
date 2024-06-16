@@ -14,11 +14,6 @@ public class Curso {
         NumVagas = numVagas;
     }
 
-    public void CalculaResultados(){
-        
-    }
-
-
     public override string ToString()
     {
         return $"Curso: {Nome} - Vagas: {NumVagas}";

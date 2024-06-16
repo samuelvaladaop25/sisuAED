@@ -1,18 +1,19 @@
 public class Fila
 {
-    Candidato[] array;
-    int primeiro, ultimo;
+    private Candidato[] array;
+    private int primeiro, ultimo, quantidade;
     public Fila(int tamanho)
     {
-        array = new Candidato[tamanho + 1];
-        primeiro = ultimo = 0;
+        array = new Candidato[tamanho];
+        primeiro = ultimo = quantidade = 0;
     }
     public void Inserir(Candidato x)
     {
-        if (((ultimo + 1) % array.Length) != primeiro)
+        if (quantidade < array.Length)
         {
             array[ultimo] = x;
             ultimo = (ultimo + 1) % array.Length;
+            quantidade++;
         }
     }
     public Candidato Remover()
@@ -21,6 +22,8 @@ public class Fila
             throw new Exception("Erro! Fila Vazia");
         Candidato resp = array[primeiro];
         primeiro = (primeiro + 1) % array.Length;
+        quantidade--;
+
         return resp;
     }
     public void Mostrar()
@@ -35,17 +38,16 @@ public class Fila
         Console.WriteLine("]");
     }
 
-    public int Contar()
+    public int GetQuantidade()
     {
-        if (primeiro == ultimo)
-            return 0;
-        int i = primeiro, contador = 0; ;
-        while (i != ultimo)
-        {
-            contador++;
-            i = (i + 1) % array.Length;
-        }
-        return contador;
+        return quantidade;
+    }
 
+    public Candidato GetPrimeiro()
+    {
+        if (primeiro != ultimo)
+            return array[primeiro];
+
+        return null;
     }
 }
