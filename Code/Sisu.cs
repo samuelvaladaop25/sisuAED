@@ -194,9 +194,13 @@ namespace sisuAED
 
                 }
             }
-
             else if (primeiroEsperaOpcao2 != null && primeiroEsperaOpcao2 == candidato)
                 cursoOpcao2.Espera.Remover();
+            else if (candidato.esperaOpcao1)
+                cursos[candidato.Opcao1].Espera = CopiarFilaSemElemento(cursos[candidato.Opcao1].Espera, candidato);
+            else if (candidato.esperaOpcao2)
+                cursos[candidato.Opcao2].Espera = CopiarFilaSemElemento(cursos[candidato.Opcao2].Espera, candidato);
+
 
             candidato.aprovadoOpcao1 = true;
             candidato.esperaOpcao1 = false;
@@ -249,6 +253,20 @@ namespace sisuAED
                 QuickSort(array, l, dir, comparar);
         }
 
+        public static Fila CopiarFilaSemElemento(Fila original, Candidato elementoParaRemover)
+        {
+            Fila copia = new Fila(original.array.Length);
+            for (int i = 0; i < original.quantidade; i++)
+            {
+                int index = (original.primeiro + i) % original.array.Length;
+                if (!original.array[index].Equals(elementoParaRemover))
+                {
+                    copia.Inserir(original.array[index]);
+                }
+            }
+            return copia;
+        }
+
         public static void EscreverSaida(Dictionary<int, Curso> cursos, string caminho)
         {
             try
@@ -257,7 +275,7 @@ namespace sisuAED
                 {
                     foreach (Curso curso in cursos.Values)
                     {
-                        writer.WriteLine($"{curso.Nome}; {curso.PegarNotaCorte():F2}");
+                        writer.WriteLine($"{curso.Nome} {curso.PegarNotaCorte():F2}");
                         writer.WriteLine("Selecionados");
                         foreach (Candidato candidato in curso.Aprovados)
                         {
@@ -265,13 +283,11 @@ namespace sisuAED
                         }
                         writer.WriteLine("Fila de Espera");
                         int i = curso.Espera.primeiro;
-                        int count = curso.Espera.GetQuantidade();
-                        while (count > 0)
+                        for (int count = curso.Espera.GetQuantidade(); count > 0; count--)
                         {
                             Candidato candidato = curso.Espera.array[i];
                             writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
                             i = (i + 1) % curso.Espera.array.Length;
-                            count--;
                         }
                         writer.WriteLine();
                     }

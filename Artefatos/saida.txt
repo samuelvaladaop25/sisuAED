@@ -1,0 +1,26 @@
+Matemática 733,33
+Selecionados
+Mickey Mouse 766,67 800 700 800
+Pato Donald 733,33 700 700 800
+Fila de Espera
+Bob Esponja 700,00 600 700 800
+
+Física 633,33
+Selecionados
+Bob Esponja 700,00 600 700 800
+Peppa Pig 633,33 700 700 500
+Fila de Espera
+
+Química 783,33
+Selecionados
+Deadpool 800,00 900 700 800
+Peter Parker 783,33 700 850 800
+Fila de Espera
+Peppa Pig 633,33 700 700 500
+
+Estatística 566,67
+Selecionados
+Tio Patinhas 666,67 700 700 600
+Super Mario Bros 566,67 600 600 500
+Fila de Espera
+
