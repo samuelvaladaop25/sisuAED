@@ -6,7 +6,6 @@ public class Curso {
     public List<Candidato> Aprovados { get; set; } = new List<Candidato>();
     public Fila Espera { get; set; } = new Fila(10);
 
-    // Constructor
     public Curso(int codigoId, string nome, int numVagas)
     {
         CodigoId = codigoId;
@@ -18,7 +17,7 @@ public class Curso {
     {
         return $"Curso: {Nome} - Vagas: {NumVagas}";
     }
-    public double PegarNotaCorte()
+    public float PegarNotaCorte()
     {
         if (Aprovados.Count == 0)
             return 0;

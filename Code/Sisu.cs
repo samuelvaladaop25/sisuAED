@@ -6,22 +6,22 @@ namespace sisuAED
     class Sisu
     {
         static void Main(string[] args)
-{
-    string[] linhas;
+        {
+            string[] linhas;
 
-    linhas = LeArquivo("../../../Artefatos/entrada.txt");
+            linhas = LeArquivo("../../../Artefatos/entrada.txt");
 
-    int numCursos, numCandidatos;
-    numCursos = int.Parse(linhas[0].Split(';')[0]);
-    numCandidatos = int.Parse(linhas[0].Split(';')[1]);
+            int numCursos, numCandidatos;
+            numCursos = int.Parse(linhas[0].Split(';')[0]);
+            numCandidatos = int.Parse(linhas[0].Split(';')[1]);
 
-    Dictionary<int, Curso> cursos = GetCursos(linhas, numCursos);
-    Candidato[] candidatos = GetCandidatos(linhas, numCandidatos, numCursos + 1);
+            Dictionary<int, Curso> cursos = GetCursos(linhas, numCursos);
+            Candidato[] candidatos = GetCandidatos(linhas, numCandidatos, numCursos + 1);
 
-    Selecao(cursos, candidatos);
+            Selecao(cursos, candidatos);
 
-    EscreverSaida(cursos, "../../../Artefatos/saida.txt");
-}
+            EscreverSaida(cursos, "../../../Artefatos/saida.txt");
+        }
 
 
         public static string[] LeArquivo(string caminho)
@@ -94,21 +94,12 @@ namespace sisuAED
 
         public static void Selecao(Dictionary<int, Curso> cursos, Candidato[] candidatos)
         {
-            // 31984762337
 
-            // AQUI O ARRAY CANDIDATOS PRECISA ESTAR ORDENADO DE FORMA DECRESCENTE DA NOTA MÉDIA
-
-            // 1- Inserir na Lista de aprovados do curso y os x (numVagas) os candidatos com a opção 1 de curso y e dar true no aprovadoop1
-            // 2- Inserir lista de espera da do curso y aqueles que tem op1 = y
-            // 3- Inserir na Lista de aprovados do curso y os x (numVagas) os candidatos com a opção 2 de curso y que nao foram aprovados na op1 e dar true no aprovadoop2
-            // 4- Inserir lista de espera da do curso y aqueles que tem op2 = y
-
-           QuickSort(candidatos, 0, candidatos.Length-1,Comparar);
+            QuickSort(candidatos, 0, candidatos.Length - 1, Comparar);
 
 
             foreach (int codigoCurso in cursos.Keys)
             {
-                // For enquanto lista de aprovados for menor que o numero de vagas
                 for (int i = 0; cursos[codigoCurso].Aprovados.Count < cursos[codigoCurso].NumVagas; i++)
                 {
                     try
@@ -117,29 +108,25 @@ namespace sisuAED
                         {
                             cursos[codigoCurso].Aprovados.Add(candidatos[i]);
 
-                            // samuel esqueceu: remove ele da lista de espera e de aprovados da segunda opcao
                             PassouOpcao1(cursos, candidatos[i]);
                         }
                     }
                     catch (Exception)
                     {
-                        // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
                         break;
                     }
                 }
 
                 if (cursos[codigoCurso].Aprovados.Count == cursos[codigoCurso].NumVagas)
                 {
-                    //Curso está sem vagas, usar fila de espera
-                    int tamEspera = cursos[codigoCurso].Espera.GetQuantidade();// samuel tinha botado dentro da condição do for e isso gasta processamento atoa
-                    for (int i = 0; tamEspera < 10 && i < candidatos.Length; i++)// samuel nao fez parar ao atingir o número de candidatos, isso aqui tava fazendo com que a função demorava 25 segundos pra rodar, nao tinha condição de parada...
+                    int tamEspera = cursos[codigoCurso].Espera.GetQuantidade();
+                    for (int i = 0; tamEspera < 10 && i < candidatos.Length; i++)
                     {
-                        // o candidato deve ter o curso como opção1 e não estar já aprovado
                         if (candidatos[i].Opcao1 == codigoCurso && candidatos[i].aprovadoOpcao1 == false)
                         {
                             cursos[codigoCurso].Espera.Inserir(candidatos[i]);
                             candidatos[i].esperaOpcao1 = true;
-                            tamEspera++; // por causa do contar do For
+                            tamEspera++;
                         }
                     }
                 }
@@ -156,29 +143,27 @@ namespace sisuAED
                     }
                     catch (Exception)
                     {
-                        // Caso nao entre, Significa que nao há mas candidatos para verificar mesmo com vagas
                         break;
                     }
                 }
 
                 if (cursos[codigoCurso].Aprovados.Count == cursos[codigoCurso].NumVagas)
                 {
-                    //Curso está sem vagas, usar fila de espera
-                    int tamEspera = cursos[codigoCurso].Espera.GetQuantidade(); // samuel tinha botado dentro da condição do for e isso gasta processamento atoa
-                    for (int i = 0; tamEspera < 10 && i < candidatos.Length; i++) // samuel nao fez parar ao atingir o número de candidatos, isso aqui tava fazendo com que a função demorava 25 segundos pra rodar, nao tinha condição de parada...
+                    int tamEspera = cursos[codigoCurso].Espera.GetQuantidade();
+                    for (int i = 0; tamEspera < 10 && i < candidatos.Length; i++)
                     {
-                        if (candidatos[i].Opcao2 == codigoCurso && candidatos[i].aprovadoOpcao2 == false && candidatos[i].aprovadoOpcao1 == false) // ele nao pode entrar na fila de espera da opcao2 estando aprvado na opcao1
+                        if (candidatos[i].Opcao2 == codigoCurso && candidatos[i].aprovadoOpcao2 == false && candidatos[i].aprovadoOpcao1 == false)
                         {
                             cursos[codigoCurso].Espera.Inserir(candidatos[i]);
                             candidatos[i].esperaOpcao2 = true;
-                            tamEspera++; // por causa do contar do For
+                            tamEspera++;
                         }
                     }
 
                 }
             }
         }
-        // faz a fila de espera da opcao2 andar
+    
         public static void PassouOpcao1(Dictionary<int, Curso> cursos, Candidato candidato)
         {
             Curso cursoOpcao2 = cursos[candidato.Opcao2];
@@ -195,7 +180,6 @@ namespace sisuAED
                     cursoOpcao2.Espera.Remover();
                     cursoOpcao2.Aprovados.Add(primeiroEspera);
 
-                    // verifica em qual das opcoes ela foi adicionada
                     if (primeiroEspera.Opcao1 == cursoOpcao2.CodigoId)
                     {
                         primeiroEspera.aprovadoOpcao1 = true;
@@ -271,11 +255,11 @@ namespace sisuAED
             {
                 using (StreamWriter writer = new StreamWriter(caminho, false, Encoding.GetEncoding("ISO-8859-1")))
                 {
-                    foreach (var curso in cursos.Values)
+                    foreach (Curso curso in cursos.Values)
                     {
-                        writer.WriteLine($"\n{curso.Nome}; {curso.PegarNotaCorte():F2}");
+                        writer.WriteLine($"{curso.Nome}; {curso.PegarNotaCorte():F2}");
                         writer.WriteLine("Selecionados");
-                        foreach (var candidato in curso.Aprovados)
+                        foreach (Candidato candidato in curso.Aprovados)
                         {
                             writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
                         }
@@ -284,11 +268,12 @@ namespace sisuAED
                         int count = curso.Espera.GetQuantidade();
                         while (count > 0)
                         {
-                            var candidato = curso.Espera.array[i];
+                            Candidato candidato = curso.Espera.array[i];
                             writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
                             i = (i + 1) % curso.Espera.array.Length;
                             count--;
                         }
+                        writer.WriteLine();
                     }
                 }
             }

@@ -26,18 +26,6 @@ public class Fila
 
         return resp;
     }
-    public void Mostrar()
-    {
-        int i = primeiro;
-        Console.Write("[");
-        while (i != ultimo)
-        {
-            Console.Write(array[i].Nome + " ");
-            i = (i + 1) % array.Length;
-        }
-        Console.WriteLine("]");
-    }
-
     public int GetQuantidade()
     {
         return quantidade;

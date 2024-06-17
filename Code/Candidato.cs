@@ -1,7 +1,7 @@
 ﻿public class Candidato
 {
     public string Nome { get; private set; }
-    public int NotaMedia { get; private set; }
+    public float NotaMedia { get; private set; }
     public int NotaRedacao { get; private set; }
     public int NotaMat { get; private set; }
     public int NotaLing { get; private set; }
@@ -12,7 +12,6 @@
 
     public bool esperaOpcao1 { get; set; }
     public bool esperaOpcao2 { get; set; }
-    // Constructor
     public Candidato(string nome, int notaRedacao, int notaMat, int notaLing, int opcao1, int opcao2)
     {
         Nome = nome;
@@ -25,7 +24,7 @@
         esperaOpcao1 = false;
         esperaOpcao2 = false;
         Opcao2 = opcao2;
-        NotaMedia = (notaRedacao + notaMat + notaLing) / 3;
+        NotaMedia = (Convert.ToSingle(notaRedacao) + Convert.ToSingle(notaMat) + Convert.ToSingle(notaLing)) / 3;
     }
 
     public override string ToString()
