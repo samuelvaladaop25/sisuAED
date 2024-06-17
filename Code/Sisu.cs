@@ -249,41 +249,38 @@ namespace sisuAED
             return array;
         }
 public static void EscreverSaida(Dictionary<int, Curso> cursos, string caminho)
-{
-    try
-    {
-        using (StreamWriter writer = new StreamWriter(caminho, false, Encoding.GetEncoding("ISO-8859-1")))
         {
-            foreach (var curso in cursos.Values)
+            try
             {
-                writer.WriteLine($"{curso.Nome}; {curso.PegarNotaCorte():F2}");
-                writer.WriteLine("Selecionados");
-                foreach (var candidato in curso.Aprovados)
+                using (StreamWriter writer = new StreamWriter(caminho, false, Encoding.GetEncoding("ISO-8859-1")))
                 {
-                    writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
+                    foreach (var curso in cursos.Values)
+                    {
+                
+                        writer.WriteLine($"\n{curso.Nome}; {curso.PegarNotaCorte():F2}");
+                        writer.WriteLine("Selecionados");
+                        foreach (var candidato in curso.Aprovados)
+                        {
+                            writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
+                        }
+                        writer.WriteLine("Fila de Espera");
+                        int i = curso.Espera.primeiro;
+                        int count = curso.Espera.GetQuantidade();
+                        while (count > 0)
+                        {
+                            var candidato = curso.Espera.array[i];
+                            writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
+                            i = (i + 1) % curso.Espera.array.Length;
+                            count--;
+                        }
+                    }
                 }
-                writer.WriteLine("Fila de Espera");
-                int i = curso.Espera.primeiro;
-                int count = curso.Espera.GetQuantidade();
-                while (count > 0)
-                {
-                    var candidato = curso.Espera.array[i];
-                    writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
-                    i = (i + 1) % curso.Espera.array.Length;
-                    count--;
-                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("O arquivo não pôde ser escrito:");
+                Console.WriteLine(e.Message);
             }
         }
     }
-    catch (IOException e)
-    {
-        Console.WriteLine("O arquivo não pôde ser escrito:");
-        Console.WriteLine(e.Message);
-    }
 }
-
-
-
-
-    }
-    }
