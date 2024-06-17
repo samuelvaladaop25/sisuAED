@@ -1,7 +1,7 @@
 public class Fila
 {
-    private Candidato[] array;
-    private int primeiro, ultimo, quantidade;
+    public Candidato[] array;
+    public int primeiro, ultimo, quantidade;
     public Fila(int tamanho)
     {
         array = new Candidato[tamanho];

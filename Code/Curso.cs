@@ -18,4 +18,10 @@ public class Curso {
     {
         return $"Curso: {Nome} - Vagas: {NumVagas}";
     }
+    public double PegarNotaCorte()
+    {
+        if (Aprovados.Count == 0)
+            return 0;
+        return Aprovados.Min(candidato => candidato.NotaMedia);
+    }
 }

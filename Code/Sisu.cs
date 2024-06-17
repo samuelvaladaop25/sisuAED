@@ -6,26 +6,23 @@ namespace sisuAED
     class Sisu
     {
         static void Main(string[] args)
-        {
-            string[] linhas;
+{
+    string[] linhas;
 
-            linhas = LeArquivo("../../../Artefatos/entrada.txt");
+    linhas = LeArquivo("../../../Artefatos/entrada.txt");
 
-            int numCursos, numCandidatos;
-            numCursos = int.Parse(linhas[0].Split(';')[0]);
-            numCandidatos = int.Parse(linhas[0].Split(';')[1]);
+    int numCursos, numCandidatos;
+    numCursos = int.Parse(linhas[0].Split(';')[0]);
+    numCandidatos = int.Parse(linhas[0].Split(';')[1]);
 
+    Dictionary<int, Curso> cursos = GetCursos(linhas, numCursos);
+    Candidato[] candidatos = GetCandidatos(linhas, numCandidatos, numCursos + 1);
 
-            Dictionary<int, Curso> cursos = GetCursos(linhas, numCursos);
-            Candidato[] candidatos = GetCandidatos(linhas, numCandidatos, numCursos + 1);
+    Selecao(cursos, candidatos);
 
-            Selecao(cursos, candidatos);
+    EscreverSaida(cursos, "../../../Artefatos/saida.txt");
+}
 
-
-
-
-
-        }
 
         public static string[] LeArquivo(string caminho)
         {
@@ -71,7 +68,7 @@ namespace sisuAED
                 }
 
                 else
-                    throw new Exception($"Linha {i} inv�lida!");
+                    throw new Exception($"Linha {i} invalida!");
             }
 
             return cursos;
@@ -89,7 +86,7 @@ namespace sisuAED
                     candidatos[i] = new Candidato(linhaDividida[0], int.Parse(linhaDividida[1]), int.Parse(linhaDividida[2]), int.Parse(linhaDividida[3]), int.Parse(linhaDividida[4]), int.Parse(linhaDividida[5]));
 
                 else
-                    throw new Exception($"Linha {i} inv�lida!");
+                    throw new Exception($"Linha {i} invalida!");
             }
 
             return candidatos;
@@ -251,6 +248,42 @@ namespace sisuAED
 
             return array;
         }
-
+public static void EscreverSaida(Dictionary<int, Curso> cursos, string caminho)
+{
+    try
+    {
+        using (StreamWriter writer = new StreamWriter(caminho, false, Encoding.GetEncoding("ISO-8859-1")))
+        {
+            foreach (var curso in cursos.Values)
+            {
+                writer.WriteLine($"{curso.Nome}; {curso.PegarNotaCorte():F2}");
+                writer.WriteLine("Selecionados");
+                foreach (var candidato in curso.Aprovados)
+                {
+                    writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
+                }
+                writer.WriteLine("Fila de Espera");
+                int i = curso.Espera.primeiro;
+                int count = curso.Espera.GetQuantidade();
+                while (count > 0)
+                {
+                    var candidato = curso.Espera.array[i];
+                    writer.WriteLine($"{candidato.Nome} {candidato.NotaMedia:F2} {candidato.NotaRedacao} {candidato.NotaMat} {candidato.NotaLing}");
+                    i = (i + 1) % curso.Espera.array.Length;
+                    count--;
+                }
+            }
+        }
+    }
+    catch (IOException e)
+    {
+        Console.WriteLine("O arquivo não pôde ser escrito:");
+        Console.WriteLine(e.Message);
     }
 }
+
+
+
+
+    }
+    }
