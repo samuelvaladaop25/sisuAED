@@ -103,7 +103,7 @@ namespace sisuAED
             // 3- Inserir na Lista de aprovados do curso y os x (numVagas) os candidatos com a opção 2 de curso y que nao foram aprovados na op1 e dar true no aprovadoop2
             // 4- Inserir lista de espera da do curso y aqueles que tem op2 = y
 
-            candidatos = QuickSort(candidatos, 0, candidatos.Length-1);
+           QuickSort(candidatos, 0, candidatos.Length-1,Comparar);
 
 
             foreach (int codigoCurso in cursos.Keys)
@@ -220,35 +220,52 @@ namespace sisuAED
             candidato.esperaOpcao2 = false;
         }
 
-        static Candidato[] QuickSort(Candidato[] array, int esq, int dir)
+        public static int Comparar(Candidato x, Candidato y)
         {
-            int l = esq, d = dir, pivo = array[(esq + dir) / 2].NotaMedia;
+            int resultado = y.NotaMedia.CompareTo(x.NotaMedia);
+            if (resultado == 0)
+            {
+                resultado = y.NotaRedacao.CompareTo(x.NotaRedacao);
+                if (resultado == 0)
+                {
+                    resultado = y.NotaMat.CompareTo(x.NotaMat);
+                    if (resultado == 0)
+                    {
+                        resultado = y.NotaLing.CompareTo(x.NotaLing);
+                    }
+                }
+            }
+            return resultado;
+        }
+
+        public static void QuickSort(Candidato[] array, int esq, int dir, Func<Candidato, Candidato, int> comparar)
+        {
+            int l = esq, d = dir;
+            Candidato pivo = array[(esq + dir) / 2];
             Candidato aux;
 
             while (l <= d)
             {
-                while (array[l].NotaMedia > pivo) l++;
-                while (array[d].NotaMedia < pivo) d--;
+                while (comparar(array[l], pivo) < 0) l++;
+                while (comparar(array[d], pivo) > 0) d--;
 
                 if (l <= d)
                 {
                     aux = array[l];
                     array[l] = array[d];
                     array[d] = aux;
-
                     l++;
                     d--;
                 }
             }
 
             if (esq < d)
-                QuickSort(array, esq, d);
+                QuickSort(array, esq, d, comparar);
             if (l < dir)
-                QuickSort(array, l, dir);
-
-            return array;
+                QuickSort(array, l, dir, comparar);
         }
-public static void EscreverSaida(Dictionary<int, Curso> cursos, string caminho)
+
+        public static void EscreverSaida(Dictionary<int, Curso> cursos, string caminho)
         {
             try
             {
@@ -256,7 +273,6 @@ public static void EscreverSaida(Dictionary<int, Curso> cursos, string caminho)
                 {
                     foreach (var curso in cursos.Values)
                     {
-                
                         writer.WriteLine($"\n{curso.Nome}; {curso.PegarNotaCorte():F2}");
                         writer.WriteLine("Selecionados");
                         foreach (var candidato in curso.Aprovados)
@@ -278,7 +294,7 @@ public static void EscreverSaida(Dictionary<int, Curso> cursos, string caminho)
             }
             catch (IOException e)
             {
-                Console.WriteLine("O arquivo não pôde ser escrito:");
+                Console.WriteLine("The file could not be written:");
                 Console.WriteLine(e.Message);
             }
         }
