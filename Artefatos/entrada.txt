@@ -1,8 +1,8 @@
 4;8
-1;Matem·tica;2
-2;FÌsica;2
-3;QuÌmica;2
-4;EstatÌstica;5
+1;Matem√°tica;2
+2;F√≠sica;2
+3;Qu√≠mica;2
+4;Estat√°stica;5
 Bob Esponja;600;700;800;1;2
 Pato Donald;700;700;800;1;2
 Mickey Mouse;800;700;800;1;2
